@@ -16,7 +16,7 @@ class App extends Component {
     this.setState({ posts });
   }
 
-  // Handle Method
+  // Handle Methods
   handleAdd = async () => {
     const obj = { title: 'a', body: 'b' };
     const { data: post } = await axios.post(apiEndPoint, obj);
@@ -29,8 +29,13 @@ class App extends Component {
   handleUpdate = (post) => {
     post.title = 'UPDATED';
     const posts = [...this.state.posts];
-    const index = posts.indexOf(post); // find the index of following post
-    posts[index] = { ...post }; // add the all prop. of post in posts
+
+    // find the index of following post
+    const index = posts.indexOf(post);
+
+    // add the all prop. of post in posts
+    posts[index] = { ...post };
+
     this.setState({ posts });
   };
 
