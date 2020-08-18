@@ -27,7 +27,11 @@ class App extends Component {
   };
 
   handleUpdate = (post) => {
-    console.log('Update', post);
+    post.title = 'UPDATED';
+    const posts = [...this.state.posts];
+    const index = posts.indexOf(post); // find the index of following post
+    posts[index] = { ...post }; // add the all prop. of post in posts
+    this.setState({ posts });
   };
 
   handleDelete = (post) => {
