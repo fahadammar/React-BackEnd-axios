@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 
+// URL
+const apiEndPoint = 'https://jsonplaceholder.typicode.com/posts';
+
 class App extends Component {
   state = {
     posts: [],
@@ -9,15 +12,18 @@ class App extends Component {
 
   // LifeCycle Hook
   async componentDidMount() {
-    const { data: posts } = await axios.get(
-      'https://jsonplaceholder.typicode.com/posts'
-    );
+    const { data: posts } = await axios.get(apiEndPoint);
     this.setState({ posts });
   }
 
   // Handle Method
-  handleAdd = () => {
-    console.log('Add');
+  handleAdd = async () => {
+    const obj = { title: 'a', body: 'b' };
+    const { data: post } = await axios.post(apiEndPoint, obj);
+
+    const posts = [post, ...this.state.posts];
+
+    this.setState({ posts });
   };
 
   handleUpdate = (post) => {
