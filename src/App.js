@@ -1,9 +1,24 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { Component } from "react";
+import axios from "axios";
+import "./App.css";
+
+// axios interceptor
+axios.interceptors.response.use(null, (error) => {
+  const expectedError =
+    error.response &&
+    error.response.status >= 400 &&
+    error.response.status <= 500;
+
+  if (!expectedError) {
+    console.log("UnExpected Error", error);
+    alert("An unexpected Error Occurred");
+  }
+
+  return Promise.reject(error);
+});
 
 // URL
-const apiEndPoint = 'https://jsonplaceholder.typicode.com/posts';
+const apiEndPoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
   state = {
@@ -18,7 +33,7 @@ class App extends Component {
 
   // Handle Methods
   handleAdd = async () => {
-    const obj = { title: 'a', body: 'b' };
+    const obj = { title: "a", body: "b" };
     const { data: post } = await axios.post(apiEndPoint, obj);
 
     const posts = [post, ...this.state.posts];
@@ -27,7 +42,7 @@ class App extends Component {
   };
 
   handleUpdate = (post) => {
-    post.title = 'UPDATED';
+    post.title = "UPDATED";
     const posts = [...this.state.posts];
 
     // find the index of following post
@@ -47,11 +62,10 @@ class App extends Component {
     this.setState({ posts });
 
     try {
-      await axios.delete(apiEndPoint + '/' + post.id);
+      await axios.delete(apiEndPoint + "/999" + post.id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
-        alert('This post has already been deleted');
-      else alert('An unexpected Error Occurred');
+        alert("This post has already been deleted");
 
       this.setState({ posts: originalPosts });
     }
@@ -103,3 +117,8 @@ class App extends Component {
 export default App;
 
 // The right place to get the Data from the Server, is the componentDidMount() lifecycle hook
+
+/*
+At the componentDidMount() if axios.get() don't get the data from the server, the interceptor kicks-In
+and log the error; the error alert. Also on request of Delete or Update if we don't get the response from the server, the interceptor Kicks-In!! Leave the un-expected Errors to the interceptor
+*/
